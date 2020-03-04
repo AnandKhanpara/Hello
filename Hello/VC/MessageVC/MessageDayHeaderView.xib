@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="4BU-0v-4WV" customClass="MessageDayHeaderView" customModule="Hello" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="481" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3py-un-6pg">
+                    <rect key="frame" x="0.0" y="0.0" width="481" height="50"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hSb-zl-9dW">
+                            <rect key="frame" x="215" y="10" width="51" height="30"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XJz-Oi-n5w">
+                                    <rect key="frame" x="10" y="5" width="31" height="20"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="20" id="xm6-qq-il6"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="14"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="XJz-Oi-n5w" secondAttribute="bottom" constant="5" id="9M9-DN-8u1"/>
+                                <constraint firstItem="XJz-Oi-n5w" firstAttribute="top" secondItem="hSb-zl-9dW" secondAttribute="top" constant="5" id="QQf-rj-Ro9"/>
+                                <constraint firstAttribute="trailing" secondItem="XJz-Oi-n5w" secondAttribute="trailing" constant="10" id="nzR-3G-IeY"/>
+                                <constraint firstItem="XJz-Oi-n5w" firstAttribute="leading" secondItem="hSb-zl-9dW" secondAttribute="leading" constant="10" id="vHU-vU-BWg"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="10"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="hSb-zl-9dW" firstAttribute="centerY" secondItem="3py-un-6pg" secondAttribute="centerY" id="CbO-uE-2bh"/>
+                        <constraint firstItem="hSb-zl-9dW" firstAttribute="centerX" secondItem="3py-un-6pg" secondAttribute="centerX" id="Pe0-pJ-bDR"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                            <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="3py-un-6pg" secondAttribute="trailing" id="AsK-Q5-s4j"/>
+                <constraint firstItem="3py-un-6pg" firstAttribute="top" secondItem="4BU-0v-4WV" secondAttribute="top" id="iGZ-iv-RaW"/>
+                <constraint firstAttribute="bottom" secondItem="3py-un-6pg" secondAttribute="bottom" id="jkX-3H-GGq"/>
+                <constraint firstItem="3py-un-6pg" firstAttribute="leading" secondItem="4BU-0v-4WV" secondAttribute="leading" id="sry-Fe-SLX"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Xqc-9M-Umw"/>
+            <connections>
+                <outlet property="lblDayDate" destination="XJz-Oi-n5w" id="5U3-hi-bC1"/>
+            </connections>
+            <point key="canvasLocation" x="736.95652173913049" y="155.35714285714286"/>
+        </view>
+    </objects>
+</document>
