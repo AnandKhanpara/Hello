@@ -15,6 +15,7 @@
 		861953A223C9A1FD00047464 /* ActivityClick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861953A123C9A1FD00047464 /* ActivityClick.swift */; };
 		861953A623C9A20C00047464 /* CustomLodingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861953A423C9A20C00047464 /* CustomLodingBarView.swift */; };
 		861953A723C9A20C00047464 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861953A523C9A20C00047464 /* CustomAlertView.swift */; };
+		862F2D67241A41D5003CA139 /* AddStatusVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862F2D66241A41D5003CA139 /* AddStatusVC.swift */; };
 		8630A22723D2BDCD00A1206A /* UserSupporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8630A22623D2BDCD00A1206A /* UserSupporting.swift */; };
 		8638FEAF23F14C900085F3DE /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8638FEAE23F14C900085F3DE /* VideoView.swift */; };
 		8641E40C23D85BB4005C661D /* MessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8641E40B23D85BB4005C661D /* MessageVC.swift */; };
@@ -56,6 +57,7 @@
 		861953A123C9A1FD00047464 /* ActivityClick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityClick.swift; sourceTree = "<group>"; };
 		861953A423C9A20C00047464 /* CustomLodingBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLodingBarView.swift; sourceTree = "<group>"; };
 		861953A523C9A20C00047464 /* CustomAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
+		862F2D66241A41D5003CA139 /* AddStatusVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStatusVC.swift; sourceTree = "<group>"; };
 		8630A22623D2BDCD00A1206A /* UserSupporting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSupporting.swift; sourceTree = "<group>"; };
 		8638FEAE23F14C900085F3DE /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		8641E40B23D85BB4005C661D /* MessageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageVC.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				86003B7B23EC13BF00C879A2 /* StatusViewVC.swift */,
 				86A55B4723ED727F00BCAFA7 /* StatusViewTVCell.swift */,
 				86DAF71A23EE86FC00977828 /* StatusCVCell.swift */,
+				862F2D66241A41D5003CA139 /* AddStatusVC.swift */,
 			);
 			path = StatusVC;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 				8667F70D23C89BFB0035FBEE /* Constant.swift in Sources */,
 				86003B7C23EC13BF00C879A2 /* StatusViewVC.swift in Sources */,
 				86DAF71B23EE86FC00977828 /* StatusCVCell.swift in Sources */,
+				862F2D67241A41D5003CA139 /* AddStatusVC.swift in Sources */,
 				864E9FEF23D30341005E4416 /* AddFriendsTVCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -71,8 +71,9 @@ class HomeVC: UIViewController {
         
         AddFriendsVC.shared.wsGetAddFriends(isBackGround: true) {
             self.arrMyFriend = AddFriendsVC.shared.arrFriends
-            self.arrMyFriend.append(UserFetch.getSIData())
-            self.wsMyFriendsStatus()
+            self.arrMyFriend.insert(UserFetch.getSIData(), at: 0)
+            //self.wsMyFriendsStatus()
+            self.wsGetStatus()
         }
         
         self.shadowView(view: self.viewPlusShadow)
@@ -98,7 +99,7 @@ class HomeVC: UIViewController {
     }
     
     @IBAction func btnStatus_touchUpInside(_ sender: UIButton) {
-  
+        
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.sourceType = .photoLibrary
@@ -130,7 +131,7 @@ class HomeVC: UIViewController {
     }
     
     //MARK:- Function
-     
+    
     func showStatusView(index:Int, userStatus:UserStatus) {
         print(index)
         print(userStatus)
@@ -213,94 +214,63 @@ class HomeVC: UIViewController {
     
     //MARK:- Web Service
     
-    func wsMyFriendsStatus() {
+    func wsGetStatus() {
         
-        var dicUserStatus = [String:NSDictionary]()
-        var dicExpireStatus = [String:String]()
-        var isRecallStatus = true
+        let numberOfFriends = self.arrMyFriend.count
+        var arrUserStatus = [UserStatus]()
+        var setNumberOfFriendsStatus = 0
         
-        func wsFriendsStatus(uId:String, complition: (() -> ())? = nil) {
+        for friend in self.arrMyFriend {
             
-            DataReference.child(FBChild.userStatus.isNothing()).child(uId.isNothing()).observe(.value) { (ref) in
+            DataReference.child(FBChild.userStatus.isNothing()).child(friend.uId.isNothing()).observeSingleEvent(of: .value) { (ref) in
                 
-                if let ref = ref.value as? NSDictionary {
-                    dicUserStatus[uId] = ref
-                }else {
-                    dicUserStatus.removeValue(forKey: uId)
-                }
-                
-                if let index = self.arrMyFriend.firstIndex(where: { $0.uId == uId }) {
-                    self.arrMyFriend.remove(at: index)
-                }
-                
-                if self.arrMyFriend.count > 0 {
-                    wsFriendsStatus(uId: self.arrMyFriend.first?.uId ?? "nothing")
-                }else {
-                    self.arrMyFriend = AddFriendsVC.shared.arrFriends
-                    self.arrMyFriend.append(UserFetch.getSIData())
-                    var allStatus = dicUserStatus.map({UserStatus(userId: $0, status: $1)}).sorted(by: {$0.userName < $1.userName})
-                    if let index = allStatus.firstIndex(where: {$0.userId == UserFetch.getSIData().uId}), let myStatus = allStatus.filter({$0.userId == UserFetch.getSIData().uId}).first {
-                        allStatus.remove(at: index)
-                        allStatus.insert(myStatus, at: 0)
+                DispatchQueue.main.async {
+                    
+                    setNumberOfFriendsStatus += 1
+                                        
+                    if let ref = ref.value as? NSDictionary, let allValue = ref.allValues as? [NSDictionary] {
+                        
+                        let arrStatus = allValue.map({ StatusDetails($0)}).filter { (status) -> Bool in
+                            let time1 = status.createdAt.stringToDate()
+                            let interval = time1.timeIntervalSince(Date())
+                            return interval > -86400
+                        }
+                        
+                        if let firstStatus = arrStatus.first {
+                            var userStauts = UserStatus()
+                            userStauts.userId = firstStatus.uId
+                            userStauts.userName = firstStatus.userName
+                            userStauts.userProfile = firstStatus.profile
+                            if let urlProfile = URL(string: firstStatus.profile) {
+                                userStauts.userProfileURL = urlProfile
+                            }
+                            userStauts.firstStatus = firstStatus
+                            arrUserStatus.append(userStauts)
+                        }
+                        
+                        let arrExpiryStatus = allValue.map({ StatusDetails($0)}).filter { (status) -> Bool in
+                            let time1 = status.createdAt.stringToDate()
+                            let interval = time1.timeIntervalSince(Date())
+                            return interval < -86400
+                        }
+                        
+                        for expiryStatus in arrExpiryStatus {
+                            DataReference.child(FBChild.userStatus.isNothing()).child(expiryStatus.uId.isNothing()).child(expiryStatus.statusId.isNothing()).removeValue()
+                        }
+                        
                     }
-                    self.arrUsersStatus = allStatus
+                    
                     DispatchQueue.main.async {
-                        self.tvLastMessage.reloadData()
-                    }
-                    if isRecallStatus == true {
-                        isRecallStatus = false
-                        findExpireStatus()
-                    }
-                }
-            }
-        }
-        
-        func findExpireStatus() {
-            DispatchQueue.global(qos: .background).async {
-                for user in self.arrUsersStatus {
-                    for status in user.arrStatus {
-                        let time1 = status.createdAt.stringToDate()
-                        let interval = time1.timeIntervalSince(Date())
-                        if interval < -86400 {
-                            dicExpireStatus[status.statusId] = user.userId
-                        }
-                    }
-                }
-                
-                let firstStatusIdRemove = (dicExpireStatus as NSDictionary).allKeys.first as? String ?? "nothing"
-                let firstUserIdRemove = dicExpireStatus[firstStatusIdRemove] ?? "nothing"
-                if (dicExpireStatus as NSDictionary).allKeys.count > 0 {
-                    wsExpiryStatusDelete(statusId: firstStatusIdRemove, userId: firstUserIdRemove)
-                }
-            }
-        }
-        
-        
-        func wsExpiryStatusDelete(statusId:String, userId:String) {
-            DispatchQueue.global(qos: .background).async {
-                DataReference.child(FBChild.userStatus.isNothing()).child(userId.isNothing()).child(statusId.isNothing()).removeValue { (error, _) in
-                    if error == nil {
-                        dicExpireStatus.removeValue(forKey: statusId)
-                        print(statusId)
-                        let firstStatusIdRemove = (dicExpireStatus as NSDictionary).allKeys.first as? String ?? "nothing"
-                        let firstUserIdRemove = dicExpireStatus[firstStatusIdRemove] ?? "nothing"
-                        if (dicExpireStatus as NSDictionary).allKeys.count > 0 {
-                            wsExpiryStatusDelete(statusId: firstStatusIdRemove, userId: firstUserIdRemove)
-                        }
-                    }else {
-                        if (dicExpireStatus as NSDictionary).allKeys.count > 0 {
-                            wsExpiryStatusDelete(statusId: statusId, userId: userId)
+                        if numberOfFriends == setNumberOfFriendsStatus {
+                            self.arrUsersStatus = arrUserStatus
+                            self.tvLastMessage.reloadData()
                         }
                     }
                 }
             }
         }
-        
-        wsFriendsStatus(uId: self.arrMyFriend.first?.uId ?? "nothing")
     }
-    
-    
-    
+        
     func wsImageUploadInFirebaseStorage(name imageName:String, _ image:UIImage, complition: @escaping (String, CGSize) -> ()) {
         
         guard let imageData = image.pngData() else { return }
@@ -490,7 +460,7 @@ extension HomeVC : UIImagePickerControllerDelegate, UINavigationControllerDelega
 
 
 /*
-
+ 
  Smith
  Brown
  Davis
@@ -500,10 +470,10 @@ extension HomeVC : UIImagePickerControllerDelegate, UINavigationControllerDelega
  Williams
  Miller
  Wilson
-
  
  
-
+ 
+ 
  Mary
  Elizabeth
  Sarah
@@ -514,5 +484,5 @@ extension HomeVC : UIImagePickerControllerDelegate, UINavigationControllerDelega
  Jane
  Susan
  Hannah
-
+ 
  */

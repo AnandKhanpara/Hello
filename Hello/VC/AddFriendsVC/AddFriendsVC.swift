@@ -27,10 +27,11 @@ class AddFriendsVC: UIViewController {
     
     var arrSenderRequest = [JoinRequest]()
     var arrReceiverRequest = [JoinRequest]()
-    var arrAddFriends = [User]()
     var arrAllUserFriends = [User]()
     var arrFriends = [User]()
-    var arrRequestFriends = [User]()
+    var arrAddNewFriends = [User]()
+    var arrReceiveRequestFriends = [User]()
+    var arrPendingRequestFriends = [User]()
     var delegate:UserDetailsDelegate?
     var isPresentView = false
     var isShowOnlyFriends = false
@@ -88,20 +89,25 @@ class AddFriendsVC: UIViewController {
     //MARK:- Function
     
     func reArrangeUserFriend(isBackGround:Bool = false, _ complition: (() -> ())? = nil ) {
-        self.arrRequestFriends.removeAll()
-        self.arrAddFriends.removeAll()
+        
+        self.arrReceiveRequestFriends.removeAll()
+        self.arrPendingRequestFriends.removeAll()
+        self.arrAddNewFriends.removeAll()
         self.arrFriends.removeAll()
-         for user in self.arrAllUserFriends {
+        
+        for user in self.arrAllUserFriends {
             
             let first = self.arrSenderRequest.contains(where: { $0.receiver == user.uId && $0.acceptRequest == "1" })
             let second = self.arrReceiverRequest.contains(where: {  $0.sender == user.uId  && $0.acceptRequest == "1" })
             
             if self.arrReceiverRequest.contains(where: { $0.sender == user.uId && $0.acceptRequest == "0" }) {
-                self.arrRequestFriends.append(user)
+                self.arrReceiveRequestFriends.append(user)
+            }else if self.arrSenderRequest.contains(where: { $0.receiver == user.uId && $0.acceptRequest == "0" }) {
+                self.arrPendingRequestFriends.append(user)
             }else if  first == true || second == true {
                 self.arrFriends.append(user)
             }else {
-                self.arrAddFriends.append(user)
+                self.arrAddNewFriends.append(user)
             }
         }
         
@@ -153,9 +159,11 @@ class AddFriendsVC: UIViewController {
         self.wsJoinSenderRequest {
             self.wsJoinReceiverRequest {
                 DataReference.child(FBChild.register.isNothing()).observe(.value) { (ref) in
+                    
                     if isBackGround == false {
                         ActivityClick.stopLoadingBar()
                     }
+                    
                     if let users = ref.value as? NSDictionary {
                         if let arrUser = users.allValues as? [NSDictionary] {
                             self.arrAllUserFriends = arrUser.map({ User($0) }).filter({ $0.uId != UserFetch.getSIData().uId })
@@ -184,19 +192,31 @@ class AddFriendsVC: UIViewController {
 extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = Bundle.main.loadNibNamed("HeaderViewTVCell", owner: nil, options: nil)?.first as? HeaderViewTVCell
-        headerView?.lblTitle.text = section == 0 ? "Request" : "Add Friends"
-        headerView?.imgViewRight.isHidden = true
-        return headerView
+        if self.isShowOnlyFriends == true {
+            return UIView()
+        }else {
+            let headerView = Bundle.main.loadNibNamed("HeaderViewTVCell", owner: nil, options: nil)?.first as? HeaderViewTVCell
+            if section == 0 {
+                headerView?.lblTitle.text = "Add Friends?"
+            }else if section == 1 {
+                headerView?.lblTitle.text = "Pending Request."
+            }else if section == 2 {
+                headerView?.lblTitle.text = "Add New Friends"
+            }
+            headerView?.imgViewRight.isHidden = true
+            return headerView
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if self.isShowOnlyFriends == true {
             return 0
         }else {
-            if self.arrRequestFriends.count == 0 {
+            if self.arrReceiveRequestFriends.count == 0 && section == 0 {
                 return 0
-            }else if self.arrAddFriends.count == 0 {
+            }else if self.arrPendingRequestFriends.count == 0 && section == 1 {
+                return 0
+            }else if self.arrAddNewFriends.count == 0 && section == 2{
               return 0
             }
             return 50
@@ -208,7 +228,7 @@ extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
         if self.isShowOnlyFriends == true {
             return 1
         }else {
-            return 2
+            return 3
         }
     }
     
@@ -216,7 +236,14 @@ extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
         if self.isShowOnlyFriends == true {
             return self.arrFriends.count
         }else {
-            return section == 0 ? self.arrRequestFriends.count : self.arrAddFriends.count
+            if section == 0 {
+                return self.arrReceiveRequestFriends.count
+            }else if section == 1 {
+                return self.arrPendingRequestFriends.count
+            }else if section == 2 {
+                return self.arrAddNewFriends.count
+            }
+            return 0
         }
     }
     
@@ -228,10 +255,13 @@ extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
             cell.user = user
         }else {
             if indexPath.section == 0 {
-                let user = self.arrRequestFriends[indexPath.row]
+                let user = self.arrReceiveRequestFriends[indexPath.row]
                 cell.user = user
-            }else {
-                let user = self.arrAddFriends[indexPath.row]
+            }else if indexPath.section == 1 {
+                let user = self.arrPendingRequestFriends[indexPath.row]
+                cell.user = user
+            }else if indexPath.section == 2 {
+                let user = self.arrAddNewFriends[indexPath.row]
                 cell.user = user
             }
         }
@@ -241,11 +271,11 @@ extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func btnJoin_touchUpInside(sender:UIButton) {
-        
-        if 20000000 <= sender.tag && sender.tag <= 29999999 {
-            let index = sender.tag - 20000000
+        let indexPath = sender.tag.findIndexPath()
+        let index = indexPath.row
+        if  indexPath.section == 2 {
             let uIdSender = UserFetch.getSIData().uId
-            let uIdReceiver = self.arrAddFriends[index].uId
+            let uIdReceiver = self.arrAddNewFriends[index].uId
             let joinId = UserSet.makeUIDCombination(firstId: uIdSender, secondId: uIdReceiver)
             
             let param = [K.SENDER : uIdSender,
@@ -258,11 +288,11 @@ extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func btnAccept_touchUpInside(sender:UIButton) {
-        
-        if 10000000 <= sender.tag && sender.tag <= 19999999 {
-            let index = sender.tag - 10000000
+        let indexPath = sender.tag.findIndexPath()
+        let index = indexPath.row
+        if  indexPath.section == 0 {
             let uIdSender = UserFetch.getSIData().uId
-            let uIdReceiver = self.arrRequestFriends[index].uId
+            let uIdReceiver = self.arrReceiveRequestFriends[index].uId
             let joinId = UserSet.makeUIDCombination(firstId: uIdSender, secondId: uIdReceiver)
             
             DataReference.child(FBChild.joinFriendsRequest.isNothing()).child(joinId.isNothing()).updateChildValues([K.ACCEPT_REQUEST : "1"])
@@ -271,21 +301,19 @@ extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
     
     @objc func btnCancel_touchUpInside(sender:UIButton) {
         DispatchQueue.main.async {
-            var index = 0
+            let indexPath = sender.tag.findIndexPath()
+            let index = indexPath.row
             let uIdSender = UserFetch.getSIData().uId
             var uIdReceiver = ""
             if self.isShowOnlyFriends == true {
-                if 10000000 <= sender.tag && sender.tag <= 19999999 {
-                    index = sender.tag - 10000000
+                if indexPath.section == 0 {
                     uIdReceiver = self.arrFriends[index].uId
                 }
             }else {
-                if 10000000 <= sender.tag && sender.tag <= 19999999 {
-                    index = sender.tag - 10000000
-                    uIdReceiver = self.arrRequestFriends[index].uId
-                }else if 20000000 <= sender.tag && sender.tag <= 29999999 {
-                    index = sender.tag - 20000000
-                    uIdReceiver = self.arrAddFriends[index].uId
+                if indexPath.section == 0 {
+                    uIdReceiver = self.arrReceiveRequestFriends[index].uId
+                }else if indexPath.section == 1 {
+                    uIdReceiver = self.arrPendingRequestFriends[index].uId
                 }
             }
             let joinId = UserSet.makeUIDCombination(firstId: uIdSender, secondId: uIdReceiver)
@@ -299,8 +327,9 @@ extension AddFriendsVC : UITableViewDelegate, UITableViewDataSource {
     @objc func btnMessage_touchUpInside(sender:UIButton) {
         self.dismiss(animated: true) {
             if self.isShowOnlyFriends == true {
-                if 10000000 <= sender.tag && sender.tag <= 19999999 {
-                    let index = sender.tag - 10000000
+                let indexPath = sender.tag.findIndexPath()
+                let index = indexPath.row
+                if indexPath.section == 0 {
                     self.delegate?.userSelectedDetails(user: self.arrFriends[index])
                 }
             }

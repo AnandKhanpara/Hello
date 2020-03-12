@@ -35,8 +35,7 @@ class MessageTextReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -92,8 +91,7 @@ class MessageDeleteReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -156,8 +154,7 @@ class MessageImageReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -235,8 +232,7 @@ class MessageLocationReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -303,8 +299,7 @@ class MessageVideoReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -371,8 +366,7 @@ class GroupMessageTextReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -426,8 +420,7 @@ class GroupMessageDeleteReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -487,8 +480,7 @@ class GroupMessageImageReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -564,8 +556,7 @@ class GroupMessageLocationReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag
@@ -632,8 +623,7 @@ class GroupMessageVideoReceiverTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.tag = tag
             self.viewSelectMessage.tag = tag
             self.viewSelectProfile.tag = tag

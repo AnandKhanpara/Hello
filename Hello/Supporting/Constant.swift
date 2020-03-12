@@ -65,6 +65,8 @@ let DataReference = Database.database().reference()
 let StorageReference = Storage.storage().reference()
 
 
+let tagMultiUserChanges:Int = 10000000
+
 var parentHomeVC:HomeVC!
 var parentAddFriendsVC:AddFriendsVC!
 var parentStatusViewVC:StatusViewVC!

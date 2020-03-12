@@ -30,8 +30,7 @@ class AddFriendsTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
+            let tag = self.indexPath.makeTag()
             self.btnJoin.tag = tag
             self.btnCancel.tag = tag
             self.btnAccept.tag = tag
@@ -56,7 +55,7 @@ class AddFriendsTVCell: UITableViewCell {
                 self.btnRemove.isHidden = true
                 self.btnMessage.isHidden = true
                 
-                if parent.arrReceiverRequest.contains(where: { $0.sender == self.user.uId }) {
+                if parent.arrReceiverRequest.contains(where: { $0.sender == self.user.uId && $0.acceptRequest == "0"}) {
                     self.btnJoin.isHidden = true
                     self.btnAccept.isHidden = false
                     self.btnCancel.isHidden = false
@@ -64,7 +63,7 @@ class AddFriendsTVCell: UITableViewCell {
                     self.btnMessage.isHidden = true
                 }
                 
-                if parent.arrSenderRequest.contains(where: { $0.receiver == self.user.uId }) {
+                if parent.arrSenderRequest.contains(where: { $0.receiver == self.user.uId  && $0.acceptRequest == "0"  }) {
                     self.btnJoin.isHidden = true
                     self.btnAccept.isHidden = true
                     self.btnCancel.isHidden = false

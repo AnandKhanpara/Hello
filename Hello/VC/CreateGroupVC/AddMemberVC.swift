@@ -26,10 +26,8 @@ class AddMemberTVCell: UITableViewCell {
     
     var indexPath:IndexPath = IndexPath() {
         didSet {
-            let tagFixed = 10000000
-            let tag = (tagFixed * (self.indexPath.section + 1)) + self.indexPath.row
-            self.btnAdd.tag = tag
-            self.btnRemove.tag = tag
+            self.btnAdd.tag = self.indexPath.makeTag()
+            self.btnRemove.tag = self.indexPath.makeTag()
             
         }
     }

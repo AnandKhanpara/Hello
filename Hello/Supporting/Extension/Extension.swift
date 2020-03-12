@@ -67,6 +67,19 @@ extension UIView {
     }
 }
 
+extension Int {
+    func findIndexPath() -> IndexPath {
+        let row = self % tagMultiUserChanges
+        let section = (self / tagMultiUserChanges) - 1
+        return IndexPath(row: row, section: section)
+    }
+}
+
+extension IndexPath {
+    func makeTag() -> Int {
+        return (((self.section + 1) * tagMultiUserChanges) + self.row)
+    }
+}
 
 extension String {
     

@@ -392,13 +392,13 @@ extension CreateGroupVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func btnAdd_touchUpInside(sender:UIButton) {
-        let index = sender.tag % 10000000
+        let index = sender.tag.findIndexPath().row
         self.arrAddFriends.append(self.arrAllFriends[index])
         self.tvAddMember.reloadData()
     }
     
     @objc func btnRemove_touchUpInside(sender:UIButton) {
-        let index = sender.tag % 10000000
+        let index = sender.tag.findIndexPath().row
         if let index = self.arrAddFriends.firstIndex(where: { $0.uId == self.arrAllFriends[index].uId }) {
             self.arrAddFriends.remove(at: index)
             self.tvAddMember.reloadData()
@@ -406,14 +406,14 @@ extension CreateGroupVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func btnRemoveAddMember_touchUpInside(sender:UIButton) {
-        let index = sender.tag % 10000000
+        let index = sender.tag.findIndexPath().row
         let key = (self.dicGroupMember as NSDictionary).allKeys[index] as? String ?? ""
         self.dicGroupMember.removeValue(forKey: key)
         self.tvAddMember.reloadData()
     }
     
     @objc func btnNewMember_touchUpInside(sender:UIButton) {
-        let index = sender.tag % 10000000
+        let index = sender.tag.findIndexPath().row
         let newMember = self.arrNewMember[index]
         self.dicGroupMember[newMember.uId] = "1"
         self.arrNewMember.remove(at: index)
@@ -532,23 +532,23 @@ extension CreateGroupVC : UITableViewDelegate, UITableViewDataSource {
 
 
 
-                                                                            /*
-                                                                             Andy: Hello Smith, how are you, it's been a long time since we last met?
-                                                                             
-                                                                             Smith: Oh, hi Andy I'm have got a new job now and is going great. How about you?
-                                                                             
-                                                                             Andy: Not too bad.
-                                                                             
-                                                                             Smith: How often do you eat at this cafe?
-                                                                             
-                                                                             Andy: This is my first time my friends kept telling me the food was great, so tonight I decided to try it. What have you been up to?
-                                                                             
-                                                                             Smith: I have been so busy with my new job that I have not had the time to do much else, but otherwise, me and the family are all fine.
-                                                                             
-                                                                             Andy: Well, I hope you and your family have a lovely meal.
-                                                                             
-                                                                             Smith: Yes you too.
-                                                                             */
+/*
+ Andy: Hello Smith, how are you, it's been a long time since we last met?
+ 
+ Smith: Oh, hi Andy I'm have got a new job now and is going great. How about you?
+ 
+ Andy: Not too bad.
+ 
+ Smith: How often do you eat at this cafe?
+ 
+ Andy: This is my first time my friends kept telling me the food was great, so tonight I decided to try it. What have you been up to?
+ 
+ Smith: I have been so busy with my new job that I have not had the time to do much else, but otherwise, me and the family are all fine.
+ 
+ Andy: Well, I hope you and your family have a lovely meal.
+ 
+ Smith: Yes you too.
+ */
 
 
 
